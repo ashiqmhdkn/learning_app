@@ -63,81 +63,113 @@ class CourseSubjectPage extends ConsumerWidget {
                         child: CourseCardNew1(
                           course: courseInfo,
 
-                          onTap: () async{                           
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true, // makes sheet expand with keyboard
-          builder: (context) {
-            final codeController = TextEditingController();
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 16,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Enter Batch Code",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: codeController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Batch code",
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final notifier =
-                          ref.read(batchRequestsProvider.notifier);
-                      notifier.setcourseId(course.course_id??"");
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctx) {
+                                  return CourseInfoPage(
+                                    course: courseInfo,
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled:
+                                            true, // makes sheet expand with keyboard
+                                        builder: (context) {
+                                          final codeController =
+                                              TextEditingController();
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 16,
+                                              right: 16,
+                                              top: 16,
+                                              bottom:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).viewInsets.bottom +
+                                                  16,
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                  "Enter Batch Code",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                TextField(
+                                                  controller: codeController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: "Batch code",
+                                                      ),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                ElevatedButton(
+                                                  onPressed: () async {
+                                                    final notifier = ref.read(
+                                                      batchRequestsProvider
+                                                          .notifier,
+                                                    );
+                                                    notifier.setcourseId(
+                                                      course.course_id ?? "",
+                                                    );
 
-                      final success = await notifier.submitRequest(
-                        code: codeController.text.trim(),
-                      );
+                                                    final success =
+                                                        await notifier
+                                                            .submitRequest(
+                                                              code:
+                                                                  codeController
+                                                                      .text
+                                                                      .trim(),
+                                                            );
 
-                      Navigator.pop(context);
-                        AppSnackBar.show(
-                          context,
-                          message:
-                            success
-                                ? "Request submitted successfully"
-                                : "Failed to submit request",
-                          type:SnackType.success,
-                          showAtTop:true,
-                        );
-                    },
-                    child: const Text("Submit"),
-                  ),
-                ],
-              ),
-            );});
+                                                    Navigator.pop(context);
+                                                    AppSnackBar.show(
+                                                      context,
+                                                      message: success
+                                                          ? "Request submitted successfully"
+                                                          : "Failed to submit request",
+                                                      type: SnackType.success,
+                                                      showAtTop: true,
+                                                    );
+                                                  },
+                                                  child: const Text("Submit"),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
 
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CourseInfoPage(
-                            //       course: courseInfo,
-                            //       onTap: () {
-                            //         Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //             builder: (context) => Subjectspage(
-                            //               courseName: course.title,
-                            //               courseId: course.course_id as String,
-                            //             ),
-                            //           ),
-                            //         );
-                            //       },
-                            //     ),
-                            //   ),
-                            // );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => CourseInfoPage(
+                                      //       course: courseInfo,
+                                      //       onTap: () {
+                                      //         Navigator.push(
+                                      //           context,
+                                      //           MaterialPageRoute(
+                                      //             builder: (context) => Subjectspage(
+                                      //               courseName: course.title,
+                                      //               courseId: course.course_id as String,
+                                      //             ),
+                                      //           ),
+                                      //         );
+                                      //       },
+                                      //     ),
+                                      //   ),
+                                      // );
+                                    },
+                                  );
+                                },
+                              ),
+                            );
                           },
                         ),
                       ),
