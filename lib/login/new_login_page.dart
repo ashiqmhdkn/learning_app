@@ -95,14 +95,14 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 onTap: () async {
                   FocusScope.of(context).unfocus();
 
-                  final pass = hashPasswordWithSalt(
-                    _passwordcontroller.text,
-                    "y6SsdIR",
-                  );
+                  // final pass = hashPasswordWithSalt(
+                  //   _passwordcontroller.text,
+                  //   "y6SsdIR",
+                  // );
 
                   bool success = await ref
                       .read(authControllerProvider.notifier)
-                      .login(_phoneNumberController.text, pass);
+                      .login(_phoneNumberController.text,_passwordcontroller.text);
                   if (!success) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,14 +130,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                     return;
                   }
                   User person = await profileapi(token);
-
-                  if (person.role == 'admin') {
-                    GoRouter.of(context).go('/adminnav');
-                  } else if (person.role == 'teacher') {
-                    GoRouter.of(context).go('/teachernav');
-                  } else {
-                    GoRouter.of(context).go('/');
-                  }
+                    GoRouter.of(context).go('/');                
                 },
               ),
 

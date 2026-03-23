@@ -35,22 +35,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             SnackBar(content: Text("unsuccessfull user fetch"),);
             GoRouter.of(context).go('/login');
         } else {
-      print(user);
-      // your existing API
-      switch (user.role) {
-        case 'admin':
-          GoRouter.of(context).go('/adminnav');
-          break;
-        case 'teacher':
-          GoRouter.of(context).go("/teachernav");
-          break;
-        case 'student':
-          GoRouter.of(context).go("/");
-          break;
-        default:
-          GoRouter.of(context).go('/login');
-      }
-    }
+      print(user); 
+      GoRouter.of(context).go("/");
+        }
     // );
   }
 

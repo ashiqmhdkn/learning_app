@@ -33,8 +33,8 @@ Future<User> profileapi(String token) async {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      if (data.containsKey('user')) {
-        return User.fromJson(data['user']);
+      if (data.containsKey('data')) {
+        return User.fromJson(data['data']['user']);
       } else {
         throw Exception('User key missing in response');
       }

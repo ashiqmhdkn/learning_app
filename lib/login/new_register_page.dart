@@ -195,17 +195,17 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
                   }
 
                   try {
-                    final hashedPassword = hashPasswordWithSalt(
-                      _passwordcontroller.text,
-                      "y6SsdIR",
-                    );
-                    await ref
+                    // final hashedPassword = hashPasswordWithSalt(
+                    //   _passwordcontroller.text,
+                    //   "y6SsdIR",
+                    // );
+                     await ref
                         .read(authControllerProvider.notifier)
                         .register(
                           email: _phoneNumberController.text,
                           name: _namecontroller.text,
                           role: _selectedRole!,
-                          password: hashedPassword,
+                          password: _passwordcontroller.text,
                         );
 
                     ScaffoldMessenger.of(context).showSnackBar(

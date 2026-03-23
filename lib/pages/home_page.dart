@@ -110,21 +110,21 @@ class HomePage extends StatelessWidget {
                     context.push('/chapters/Maths');
                   },
                   title: "Maths",
-                  backGroundImage: 'lib/assets/maths.jpeg',
+                  backGroundImage: 'https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/7c9a98e1-fffd-4859-83a8-37be105bfc00/public',
                 ),
                 PracticeTile2(
                   onTap: () {
                     context.push('/chapters/Physics');
                   },
                   title: "physics",
-                  backGroundImage: 'lib/assets/physics.jpeg',
+                  backGroundImage: 'https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/7c9a98e1-fffd-4859-83a8-37be105bfc00/public',
                 ),
                 PracticeTile2(
                   onTap: () {
                     context.push('/chapters/Biology');
                   },
                   title: "Biology",
-                  backGroundImage: 'lib/assets/biology.jpeg',
+                  backGroundImage: 'https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/7c9a98e1-fffd-4859-83a8-37be105bfc00/public',
                 ),
               ],
             ),

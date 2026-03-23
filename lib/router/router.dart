@@ -15,8 +15,12 @@ final router = GoRouter(
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/', builder: (context, state) => const StudentNavbar()),
     GoRoute(path: "/login", builder: (context, state) => const NewLoginPage()),
-    GoRoute(path: "/register",builder: (context, state) => const NewRegisterPage(),),
-    GoRoute(path: "/profile/:username",
+    GoRoute(
+      path: "/register",
+      builder: (context, state) => const NewRegisterPage(),
+    ),
+    GoRoute(
+      path: "/profile/:username",
       builder: (context, state) {
         final username = state.pathParameters['username']!;
         return Profilepage(username: username);
