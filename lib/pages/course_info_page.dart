@@ -11,42 +11,46 @@ class CourseInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        body: Stack( 
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 90),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _HeaderSection(
-                      imageUrl: course.bannerImageUrl,
-                      heroTag: course.id,
-                    ),
-
-                    _TitleSection(course: course),
-                    _EnrollmentSection(course: course),
-                    const _TabSection(),
-                    SizedBox(
-                      height: 400,
-                      child: TabBarView(
-                        children: [
-                          _AboutTab(course: course),
-                          const Center(child: Text("Schedule")),
-                          const Center(child: Text("Educators")),
-                          const Center(child: Text("Testimonials")),
-                        ],
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 90),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _HeaderSection(
+                        imageUrl: course.bannerImageUrl,
+                        heroTag: course.id,
                       ),
-                    ),
-                  ],
+
+                      _TitleSection(course: course),
+                      _EnrollmentSection(course: course),
+                      const _TabSection(),
+                      SizedBox(
+                        height: 400,
+                        child: TabBarView(
+                          children: [
+                            _AboutTab(course: course),
+                            const Center(child: Text("Schedule")),
+                            const Center(child: Text("Educators")),
+                            const Center(child: Text("Testimonials")),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            _BottomCTA(course: course, onTap: onTap),
-          ],
+              _BottomCTA(course: course, onTap: onTap),
+            ],
+          ),
         ),
       ),
     );

@@ -5,7 +5,6 @@ import 'package:learning_app/pages/coursePage.dart';
 import 'package:learning_app/pages/home_page.dart';
 import 'package:learning_app/pages/student_notifications.dart';
 
-
 final dummyCourse = CourseInfoModel(
   id: "1",
   title: "Class 9",
@@ -107,37 +106,40 @@ class _StudentNavbarState extends State<StudentNavbar>
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          _pages[_previousIndex],
-          SlideTransition(
-            position: _slideAnimation,
-            child: _pages[_currentIndex],
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        color: colorScheme.surface,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: GNav(
-          selectedIndex: _currentIndex,
-          onTabChange: _onTabChange,
-          gap: 8,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          tabBorderRadius: 16,
-          activeColor: colorScheme.onPrimary,
-          tabBackgroundColor: colorScheme.primary,
-          color: colorScheme.secondary,
-          tabs: const [
-            GButton(icon: Icons.menu_book, text: 'Learn'),
-            GButton(icon: Icons.explore, text: 'Explore'),
-            // GButton(icon: Icons.person_outline, text: 'Admin'), // OLD CODE
-            GButton(icon: Icons.notifications, text: 'Messages'), // NEW CODE
-            GButton(icon: Icons.grade_outlined, text: 'Marks'),
+    return SafeArea(
+      bottom: true,
+      top: false,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            _pages[_previousIndex],
+            SlideTransition(
+              position: _slideAnimation,
+              child: _pages[_currentIndex],
+            ),
           ],
+        ),
+        bottomNavigationBar: Container(
+          color: colorScheme.surface,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: GNav(
+            selectedIndex: _currentIndex,
+            onTabChange: _onTabChange,
+            gap: 8,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            tabBorderRadius: 16,
+            activeColor: colorScheme.onPrimary,
+            tabBackgroundColor: colorScheme.primary,
+            color: colorScheme.secondary,
+            tabs: const [
+              GButton(icon: Icons.menu_book, text: 'Learn'),
+              GButton(icon: Icons.explore, text: 'Explore'),
+              GButton(icon: Icons.notifications, text: 'Messages'), // NEW CODE
+              GButton(icon: Icons.grade_outlined, text: 'Marks'),
+            ],
+          ),
         ),
       ),
     );

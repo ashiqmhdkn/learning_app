@@ -108,183 +108,189 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: const Text(
-          "Edit Profile",
-          style: TextStyle(fontWeight: FontWeight.bold),
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          title: const Text(
+            "Edit Profile",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: false,
         ),
-        centerTitle: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundImage: _profileImagePath.isNotEmpty
-                        ? FileImage(File(_profileImagePath))
-                        : const AssetImage('lib/assets/image.png')
-                              as ImageProvider,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap:(){},
-                      //  _pickFile,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: colorScheme.primary,
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 18,
-                          color: Colors.white,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 55,
+                      backgroundImage: _profileImagePath.isNotEmpty
+                          ? FileImage(File(_profileImagePath))
+                          : const AssetImage('lib/assets/image.png')
+                                as ImageProvider,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {},
+                        //  _pickFile,
+                        child: CircleAvatar(
+                          radius: 18,
+                          backgroundColor: colorScheme.primary,
+                          child: const Icon(
+                            Icons.camera_alt,
+                            size: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+              Customprimarytext(text: "Full Name", fontValue: 15),
+              Customtextbox(
+                hinttext: "Full Name",
+                textController: _nameController,
+                textFieldIcon: Icons.person,
+              ),
+
+              const SizedBox(height: 16),
+              Customprimarytext(text: "Phone Number", fontValue: 15),
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ],
+                  prefixIcon: const Icon(Icons.phone),
+                  hintText: "Phone Number",
+                ),
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
               ),
-            ),
 
-            const SizedBox(height: 30),
-            Customprimarytext(text: "Full Name", fontValue: 15),
-            Customtextbox(
-              hinttext: "Full Name",
-              textController: _nameController,
-              textFieldIcon: Icons.person,
-            ),
+              const SizedBox(height: 16),
+              Customprimarytext(text: "Email Address", fontValue: 15),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  hintText: "Email Address",
+                  prefixIcon: Icon(Icons.mail),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
 
-            const SizedBox(height: 16),
-            Customprimarytext(text: "Phone Number", fontValue: 15),
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
+              const SizedBox(height: 16),
+              Customprimarytext(text: "Role", fontValue: 15),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outline),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                prefixIcon: const Icon(Icons.phone),
-                hintText: "Phone Number",
-              ),
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-            ),
-
-            const SizedBox(height: 16),
-            Customprimarytext(text: "Email Address", fontValue: 15),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  items: ['student', 'teacher', 'admin']
+                      .map(
+                        (role) => DropdownMenuItem(
+                          value: role,
+                          child: Text(
+                            role[0].toUpperCase() + role.substring(1),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  value: _selectedRole,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedRole = value;
+                      });
+                    }
+                  },
                 ),
-                hintText: "Email Address",
-                prefixIcon: Icon(Icons.mail),
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
 
-            const SizedBox(height: 16),
-            Customprimarytext(text: "Role", fontValue: 15),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: colorScheme.outline),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                underline: const SizedBox(),
-                items: ['student', 'teacher', 'admin']
-                    .map(
-                      (role) => DropdownMenuItem(
-                        value: role,
-                        child: Text(role[0].toUpperCase() + role.substring(1)),
+              const SizedBox(height: 30),
+              Center(
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : Custombuttonone(
+                        text: "Save Changes",
+                        onTap: _handleSaveChanges,
                       ),
-                    )
-                    .toList(),
-                value: _selectedRole,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedRole = value;
-                    });
-                  }
-                },
               ),
-            ),
-
-            const SizedBox(height: 30),
-            Center(
-              child: _isLoading
-                  ? const CircularProgressIndicator()
-                  : Custombuttonone(
-                      text: "Save Changes",
-                      onTap: _handleSaveChanges,
-                    ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-//   Future<void> _pickFile() async {
-//     final result = await FilePicker.platform.pickFiles(type: FileType.image);
+  //   Future<void> _pickFile() async {
+  //     final result = await FilePicker.platform.pickFiles(type: FileType.image);
 
-//     if (result != null && result.files.single.path != null) {
-//       final String pickedImagePath = result.files.single.path!;
+  //     if (result != null && result.files.single.path != null) {
+  //       final String pickedImagePath = result.files.single.path!;
 
-//       final String? croppedImagePath = await ImageCropHelper.cropImage(
-//         context,
-//         pickedImagePath,
-//         aspectRatio: _aspectRatio,
-//       );
+  //       final String? croppedImagePath = await ImageCropHelper.cropImage(
+  //         context,
+  //         pickedImagePath,
+  //         aspectRatio: _aspectRatio,
+  //       );
 
-//       if (croppedImagePath != null) {
-//         setState(() {
-//           _profileImagePath = croppedImagePath;
-//         });
-//       }
-//     }
-//   }
+  //       if (croppedImagePath != null) {
+  //         setState(() {
+  //           _profileImagePath = croppedImagePath;
+  //         });
+  //       }
+  //     }
+  //   }
 
-//   void _showImagePreviewDialog(String imagePath) {
-//     showDialog(
-//       context: context,
-//       builder: (context) {
-//         return AlertDialog(
-//           contentPadding: const EdgeInsets.all(16),
-//           content: AspectRatioImageField(
-//             imagePath: imagePath,
-//             aspectRatio: _aspectRatio,
-//             onPick: () {},
-//             onRemove: () {},
-//           ),
-//           actions: [
-//             TextButton(
-//               onPressed: () => Navigator.pop(context),
-//               child: const Text("Cancel"),
-//             ),
-//             ElevatedButton(
-//               onPressed: () {
-//                 setState(() {
-//                   _profileImagePath = imagePath;
-//                 });
-//                 Navigator.pop(context);
-//               },
-//               child: const Text("Use Image"),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
+  //   void _showImagePreviewDialog(String imagePath) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //           contentPadding: const EdgeInsets.all(16),
+  //           content: AspectRatioImageField(
+  //             imagePath: imagePath,
+  //             aspectRatio: _aspectRatio,
+  //             onPick: () {},
+  //             onRemove: () {},
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: const Text("Cancel"),
+  //             ),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 setState(() {
+  //                   _profileImagePath = imagePath;
+  //                 });
+  //                 Navigator.pop(context);
+  //               },
+  //               child: const Text("Use Image"),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
 }
