@@ -2,16 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:learning_app/model_save/user.dart';
 import 'package:learning_app/api/profileapi.dart';
 import 'package:learning_app/controller/authcontroller.dart';
-import 'package:learning_app/models/user_model.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
 
 class UpdateProfilePage extends ConsumerStatefulWidget {
-  final User user;
-  const UpdateProfilePage({super.key, required this.user});
+  const UpdateProfilePage({super.key,});
 
   @override
   ConsumerState<UpdateProfilePage> createState() => _UpdateProfilePageState();
@@ -29,12 +29,13 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user.username);
-    _emailController = TextEditingController(text: widget.user.email);
+    var userBox = Hive.box<User>('userBox');
+    var user = userBox.get('currentUser');
+    _nameController = TextEditingController(text: user?.name);
+    _emailController = TextEditingController(text: user?.email);
     _phoneController = TextEditingController(
-      text: widget.user.phone.toString(),
+      text: user?.phone.toString(),
     );
-    _selectedRole = widget.user.role;
   }
 
   @override
@@ -65,17 +66,13 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
     setState(() => _isLoading = true);
 
     try {
-      // Create updated user object
-      final updatedUser = widget.user.copyWith(
-        username: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        phone: int.tryParse(_phoneController.text.trim()) ?? widget.user.phone,
-        role: _selectedRole,
-      );
       final token = ref.read(authControllerProvider);
-
       // Call your user controller to update profile
-      await profileupdate(token!, updatedUser);
+      await profileupdate(
+        token:token!, 
+        name:_nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: int.tryParse(_phoneController.text.trim()) ??0);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -178,65 +175,29 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
                 keyboardType: TextInputType.phone,
               ),
 
-              const SizedBox(height: 16),
-              Customprimarytext(text: "Email Address", fontValue: 15),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  hintText: "Email Address",
-                  prefixIcon: Icon(Icons.mail),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-
-              const SizedBox(height: 16),
-              Customprimarytext(text: "Role", fontValue: 15),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorScheme.outline),
+            const SizedBox(height: 16),
+            Customprimarytext(text: "Email Address", fontValue: 15),
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  underline: const SizedBox(),
-                  items: ['student', 'teacher', 'admin']
-                      .map(
-                        (role) => DropdownMenuItem(
-                          value: role,
-                          child: Text(
-                            role[0].toUpperCase() + role.substring(1),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  value: _selectedRole,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedRole = value;
-                      });
-                    }
-                  },
-                ),
+                hintText: "Email Address",
+                prefixIcon: Icon(Icons.mail),
               ),
-
-              const SizedBox(height: 30),
-              Center(
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : Custombuttonone(
-                        text: "Save Changes",
-                        onTap: _handleSaveChanges,
-                      ),
-              ),
-            ],
-          ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 30),
+            Center(
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : Custombuttonone(
+                      text: "Save Changes",
+                      onTap: _handleSaveChanges,
+                    ),
+            ),
+          ],
         ),
       ),
     );

@@ -27,7 +27,7 @@ Future<bool> batchRequestSubmit({
       headers: _headers(token),
       body: jsonEncode({'course_id': courseId, 'code': code}),
     );
-
+    print("token");
     print('batchRequestSubmit | ${res.statusCode} | ${res.body}');
     return res.statusCode == 200;
   } catch (e) {

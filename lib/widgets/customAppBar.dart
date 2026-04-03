@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/model_save/user.dart';
 
 class Customappbar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
@@ -10,18 +12,15 @@ class Customappbar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authControllerProvider);
+    final userBox = Hive.box<User>('userBox');
     return AppBar(
       scrolledUnderElevation: 0,
       title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
       actions: [
         IconButton(
           onPressed: () async {
-            // if (authState == null || authState.isEmpty || authState == "loading") {
-            //   GoRouter.of(context).push('/login');
-            // }
-            // String name = await profileapi(authState!);
-            context.push('/profile/Vaishnav');
+            final savedUser = userBox.get('currentUser');
+            context.push('/profile/${savedUser?.name}');
           },
           icon: CircleAvatar(
             backgroundImage: AssetImage("lib/assets/image.png"),

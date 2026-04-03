@@ -53,7 +53,7 @@ Future<User> profileapi(String token) async {
 
 
 // Update user profile
-Future<String> profileupdate(String token, User user) async {
+Future<String> profileupdate({required String token,required String name,required String email,required int phone  }) async {
   final uri = Uri.parse('$baseUrl/profile');
 
   try {
@@ -65,10 +65,10 @@ Future<String> profileupdate(String token, User user) async {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
       body: jsonEncode({
-        'name': user.username,
-        'email': user.email,
-        'role': user.role,
-        'phone': user.phone,
+        'name': name,
+        'email': email,
+        'role': "student",
+        'phone': phone,
       }),
     );
 

@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:learning_app/login/new_login_page.dart';
 import 'package:learning_app/login/new_register_page.dart';
-import 'package:learning_app/models/user_model.dart';
 import 'package:learning_app/pages/chatpers_units.dart';
 import 'package:learning_app/pages/profilePage.dart';
 import 'package:learning_app/pages/splash.dart';
@@ -15,10 +14,8 @@ final router = GoRouter(
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/', builder: (context, state) => const StudentNavbar()),
     GoRoute(path: "/login", builder: (context, state) => const NewLoginPage()),
-    GoRoute(
-      path: "/register",
-      builder: (context, state) => const NewRegisterPage(),
-    ),
+    GoRoute(path: "/editProfile",builder: (context, state) =>const UpdateProfilePage()),
+    GoRoute(path: "/register",builder: (context, state) => const NewRegisterPage()),
     GoRoute(
       path: "/profile/:username",
       builder: (context, state) {
@@ -32,13 +29,6 @@ final router = GoRouter(
         final unitname = state.pathParameters['unitname']!;
         final unitId = state.extra as String;
         return Unitspage(unitName: unitname, unitId: unitId);
-      },
-    ),
-    GoRoute(
-      path: "/editProfile",
-      builder: (context, state) {
-        final user = state.extra as User;
-        return UpdateProfilePage(user: user);
       },
     ),
     GoRoute(

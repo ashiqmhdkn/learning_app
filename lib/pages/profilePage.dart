@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learning_app/api/profileapi.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/model_save/user.dart';
 import 'package:learning_app/models/streak_modal.dart';
-import 'package:learning_app/models/user_model.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/darkOrLight.dart';
 import 'package:learning_app/widgets/streak_widget.dart';
@@ -12,7 +12,6 @@ import 'package:learning_app/widgets/streak_widget.dart';
 class DummyStreakData {
   static List<StreakDay> generate() {
     final today = DateTime.now();
-
     return [
       StreakDay(
         date: today.subtract(const Duration(days: 6)),
@@ -47,77 +46,69 @@ class Profilepage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dummyData = DummyStreakData.generate();
-    final authState = ref.watch(authControllerProvider);
-    return SafeArea(
-      top: false,
-      bottom: true,
-      child: Scaffold(
-        appBar: AppBar(actions: [Darkorlight()], scrolledUnderElevation: 0),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircleAvatar(
-                    radius: 70,
-                    backgroundImage: NetworkImage(
-                      "https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/99b1944d-1cec-422f-a658-655e7df66800/public",
-                    ),
-                  ),
-                  const SizedBox(width: 60),
-                  Flexible(
-                    child: Column(
-                      children: [
-                        Customprimarytext(text: username, fontValue: 25),
-                        Customprimarytext(text: "Class XII", fontValue: 15),
-                        SizedBox(height: 5),
-                        SizedBox(
-                          height: 30,
-                          width: 90,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context).colorScheme.tertiary,
-                              ),
+   var userBox = Hive.box<User>('userBox');
+    var user = userBox.get('currentUser');
+    print(user?.name);
+
+
+    return Scaffold(
+      appBar: AppBar(actions: [Darkorlight()], scrolledUnderElevation: 0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 70,
+                  backgroundImage: NetworkImage(user?.image ??"https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/99b1944d-1cec-422f-a658-655e7df66800/public"),
+                ),
+                const SizedBox(width: 60),
+                Flexible(
+                  child: Column(
+                    children: [
+                      Customprimarytext(text: username, fontValue: 25),
+                      Customprimarytext(text: "Class XII", fontValue: 15),
+                      SizedBox(height: 5),
+                      SizedBox(
+                        height: 30,
+                        width: 90,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context).colorScheme.tertiary,
                             ),
-                            onPressed: () async {
-                              var token = await ref
-                                  .read(authControllerProvider.notifier)
-                                  .getToken();
-                              print("Token in profile page: $token");
-                              User user = await profileapi(token!);
-                              GoRouter.of(
-                                context,
-                              ).push('/editProfile', extra: user);
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.edit,
-                                  size: 12,
+                          ),
+                          onPressed: () async {
+                            GoRouter.of(
+                              context,
+                            ).push('/editProfile',);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                size: 12,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              Text(
+                                "Edit",
+                                style: TextStyle(
+                                  fontSize: 12,
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.secondary,
                                 ),
-                                Text(
-                                  "Edit",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.secondary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
               const SizedBox(height: 10),
               Padding(

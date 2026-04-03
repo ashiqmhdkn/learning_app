@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:learning_app/api/profileapi.dart';
 import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/model_save/user.dart';
 // your AuthController
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -30,6 +32,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
     // If you need profile API call:
     final user = await profileapi(token!);
+    final setuser=User()
+    ..userId=user.userId!
+    ..name=user.username
+    ..email=user.email
+    ..phone=user.phone.toString()??"00"
+    ..image=user.image!
+    ..role=user.role;
+    final userBox =Hive.box<User>('userBox');
+    await userBox.put('currentUser', setuser);
     // Timer(Duration(seconds: 5),()=>context.go('/test'));
     if (user == Error()) {
             SnackBar(content: Text("unsuccessfull user fetch"),);
