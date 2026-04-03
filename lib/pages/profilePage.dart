@@ -167,7 +167,6 @@ class Profilepage extends ConsumerWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

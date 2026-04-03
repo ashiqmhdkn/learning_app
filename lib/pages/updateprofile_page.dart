@@ -21,10 +21,8 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  String _selectedRole = '';
   bool _isLoading = false;
   String _profileImagePath = "";
-  final double _aspectRatio = 1;
 
   @override
   void initState() {
@@ -199,6 +197,7 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
