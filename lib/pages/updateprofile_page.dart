@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:learning_app/model_save/user.dart';
 import 'package:learning_app/api/profileapi.dart';
 import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
@@ -27,9 +27,8 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
   @override
   void initState() {
     super.initState();
-    var userBox = Hive.box<User>('userBox');
-    var user = userBox.get('currentUser');
-    _nameController = TextEditingController(text: user?.name);
+    final user = HiveService.getUser();
+    _nameController = TextEditingController(text: user?.username);
     _emailController = TextEditingController(text: user?.email);
     _phoneController = TextEditingController(
       text: user?.phone.toString(),

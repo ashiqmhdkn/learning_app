@@ -3,7 +3,7 @@ class User {
   final String username;
   final String email;
   final String? image;
-  final int phone;
+  final int? phone;
   final String role;
   final DateTime? lastLogin;
 
@@ -19,11 +19,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      image:json['image']as String ,
+      image: json['image']?.toString() ?? 'https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/99b1944d-1cec-422f-a658-655e7df66800/public',
       userId: json['user_id'] as String,
       username: json['name'] as String,
       email: json['email'] as String,
-      phone: int.tryParse(json['phone']?.toString() ?? '0') ?? 0,
+      phone: int.tryParse(json['phone']?.toString() ?? '') ?? -1,
       role: json['role'] as String,
       lastLogin: json['last_login'] != null
           ? DateTime.parse(json['last_login'] as String)

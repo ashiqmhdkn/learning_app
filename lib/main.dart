@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learning_app/model_save/user.dart';
 import 'package:learning_app/router/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_app/state/themeState.dart';
+import 'package:learning_app/utils/hive_serivce.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
+   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-   Hive.registerAdapter(UserAdapter()); 
-  await Hive.openBox<User>('userBox');
+  await HiveService.openAllBoxes();
   runApp(const ProviderScope(child: MyApp()));
 }
 

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:learning_app/controller/authcontroller.dart';
-import 'package:learning_app/model_save/user.dart';
 import 'package:learning_app/models/streak_modal.dart';
+import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/darkOrLight.dart';
 import 'package:learning_app/widgets/streak_widget.dart';
@@ -46,9 +45,8 @@ class Profilepage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dummyData = DummyStreakData.generate();
-   var userBox = Hive.box<User>('userBox');
-    var user = userBox.get('currentUser');
-    print(user?.name);
+    final user = HiveService.getUser();
+    print(user?.username);
 
 
     return Scaffold(
@@ -61,7 +59,7 @@ class Profilepage extends ConsumerWidget {
               children: [
                 CircleAvatar(
                   radius: 70,
-                  backgroundImage: NetworkImage(user?.image ??"https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/99b1944d-1cec-422f-a658-655e7df66800/public"),
+                  backgroundImage: NetworkImage(user?.image ??""),
                 ),
                 const SizedBox(width: 60),
                 Flexible(

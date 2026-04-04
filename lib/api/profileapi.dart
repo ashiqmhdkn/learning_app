@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:learning_app/models/user_model.dart';
+import 'package:learning_app/utils/store_hive.dart';
 
 const String baseUrl = 'https://api.crescentlearning.org';
 
@@ -34,6 +35,7 @@ Future<User> profileapi(String token) async {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
       if (data.containsKey('data')) {
+        storeHive(data['data']);
         return User.fromJson(data['data']['user']);
       } else {
         throw Exception('User key missing in response');
