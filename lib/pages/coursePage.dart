@@ -6,6 +6,7 @@ import 'package:learning_app/pages/course_info_page.dart';
 import 'package:learning_app/provider/courses_provider.dart';
 import 'package:learning_app/provider/request_provider.dart';
 import 'package:learning_app/utils/app_snackbar.dart';
+import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/course_card_new1.dart';
 import 'package:learning_app/widgets/customAppBar.dart';
 
@@ -15,9 +16,10 @@ class CourseSubjectPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coursesAsync = ref.watch(coursesNotifierProvider);
+    final user = HiveService.getUser();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: Customappbar(title: "Username"),
+      appBar: Customappbar(title: user?.username??"username"),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: coursesAsync.when(

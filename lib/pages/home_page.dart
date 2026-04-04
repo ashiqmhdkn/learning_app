@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learning_app/pages/coursePage.dart';
-import 'package:learning_app/pages/videoPlayBack.dart';
 import 'package:learning_app/provider/subject_provider.dart';
 import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/practiceTIle2.dart';
-import 'package:learning_app/widgets/previousLearned.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -18,7 +15,6 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _MyHomePageState extends ConsumerState<HomePage> {
   final courses = HiveService.getCourses();
-
   String? selectedCourse;
 
   @override
@@ -29,17 +25,28 @@ class _MyHomePageState extends ConsumerState<HomePage> {
 
   Future<void> _loadSelectedCourse() async {
     final prefs = await SharedPreferences.getInstance();
-
     String? savedCourse = prefs.getString('selected_course');
 
+    String? courseToUse;
     if (savedCourse != null && courses.any((c) => c.course_id == savedCourse)) {
-      selectedCourse = savedCourse;
+      courseToUse = savedCourse;
     } else if (courses.isNotEmpty) {
-      selectedCourse = courses[0].course_id; // ✅ default first course
-      await prefs.setString('selected_course', selectedCourse!);
+      courseToUse = courses[0].course_id;
+      await prefs.setString('selected_course', courseToUse!);
     }
 
-    setState(() {});
+    if (courseToUse != null) {
+      setState(() {
+        selectedCourse = courseToUse;
+      });
+
+      // ✅ Safe to call AFTER build completes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref
+            .read(subjectsNotifierProvider.notifier)
+            .setcourse_id(courseToUse!);
+      });
+    }
   }
 
   Future<void> _saveSelectedCourse(String value) async {
@@ -52,28 +59,39 @@ class _MyHomePageState extends ConsumerState<HomePage> {
     if (courses.isEmpty) {
       return CourseSubjectPage();
     }
-
+final user = HiveService.getUser();
     return Scaffold(
       appBar: AppBar(
+        actions: [ 
+          IconButton(
+          onPressed: () async {
+            context.push('/profile/${user?.username}');
+          },
+          icon: CircleAvatar(
+            backgroundImage:NetworkImage(user?.image ??""),
+          ),
+        ),],
         title: DropdownMenu<String>(
           initialSelection: selectedCourse,
           dropdownMenuEntries: courses
-              .map(
-                (course) => DropdownMenuEntry<String>(
-                  value: course.course_id!,
-                  label: course.title,
-                ),
-              )
+              .map((course) => DropdownMenuEntry<String>(
+                    value: course.course_id!,
+                    label: course.title,
+                  ))
               .toList(),
-          // ✅ In onSelected callback
           onSelected: (value) async {
             if (value == null) return;
+
             setState(() {
               selectedCourse = value;
             });
+
             await _saveSelectedCourse(value);
-            // ✅ Trigger provider update here, not in build
-            ref.read(subjectsNotifierProvider.notifier).setcourse_id(value);
+
+            // ✅ Safe — called from a user interaction, not during build
+            ref
+                .read(subjectsNotifierProvider.notifier)
+                .setcourse_id(value);
           },
         ),
       ),
@@ -83,10 +101,12 @@ class _MyHomePageState extends ConsumerState<HomePage> {
 
   Widget _buildBody() {
     if (selectedCourse == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
-    ref.read(subjectsNotifierProvider.notifier).setcourse_id(selectedCourse!);
+
+    // ✅ Only watch — no side effects here
     final subjectsState = ref.watch(subjectsNotifierProvider);
+
     return subjectsState.when(
       data: (subjects) {
         if (subjects.isEmpty) {
@@ -122,14 +142,11 @@ class _MyHomePageState extends ConsumerState<HomePage> {
           ),
         );
       },
-
       loading: () => const Center(child: CircularProgressIndicator()),
-
       error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
 }
-
 
 
 

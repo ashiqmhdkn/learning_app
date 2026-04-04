@@ -145,23 +145,12 @@ class Profilepage extends ConsumerWidget {
                 title: "Sign out",
                 onTap: () async {
                   await ref.read(authControllerProvider.notifier).logout();
+                  HiveService.clearAll();
                   GoRouter.of(context).go('/login');
                 },
               ),
 
-              const SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: const Text(
-                    "Delete account",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             ],
           ),
         ),
