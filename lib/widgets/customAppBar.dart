@@ -21,7 +21,7 @@ class Customappbar extends ConsumerWidget implements PreferredSizeWidget {
             context.push('/profile/${user?.username}');
           },
           icon: CircleAvatar(
-            backgroundImage: AssetImage("lib/assets/image.png"),
+            backgroundImage:NetworkImage(user?.image ??""),
           ),
         ),
       ],

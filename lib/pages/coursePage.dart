@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:learning_app/models/course_info_model.dart';
 import 'package:learning_app/pages/course_info_page.dart';
-import 'package:learning_app/pages/subjectsPage.dart';
 import 'package:learning_app/provider/courses_provider.dart';
 import 'package:learning_app/provider/request_provider.dart';
 import 'package:learning_app/utils/app_snackbar.dart';
