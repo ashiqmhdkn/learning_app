@@ -48,77 +48,78 @@ class Profilepage extends ConsumerWidget {
     final user = HiveService.getUser();
     print(user?.username);
 
-
-    return Scaffold(
-      appBar: AppBar(actions: [Darkorlight()], scrolledUnderElevation: 0),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-  radius: 70,
-  backgroundColor: Colors.grey.shade200,
-  backgroundImage: (user?.image != null && user!.image!.isNotEmpty)
-      ? NetworkImage(user.image!)
-      : null,
-  child: (user?.image == null || user!.image!.isEmpty)
-      ?Image.asset('lib/assets/image.png')
-      : null,
-),
-                const SizedBox(width: 60),
-                Flexible(
-                  child: Column(
-                    children: [
-                      Customprimarytext(text: username, fontValue: 25),
-                      Customprimarytext(text: user?.email??" ", fontValue: 15),
-                      SizedBox(height: 5),
-                      SizedBox(
-                        height: 30,
-                        width: 90,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              Theme.of(context).colorScheme.tertiary,
-                            ),
-                          ),
-                          onPressed: () async {
-                            GoRouter.of(
-                              context,
-                            ).push('/editProfile',);
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit,
-                                size: 12,
-                                color: Theme.of(context).colorScheme.secondary,
+    return SafeArea(
+      bottom: true,
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(actions: [Darkorlight()], scrolledUnderElevation: 0),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage:
+                        (user?.image != null && user!.image!.isNotEmpty)
+                        ? NetworkImage(user.image!)
+                        : null,
+                    child: (user?.image == null || user!.image!.isEmpty)
+                        ? Image.asset('lib/assets/image.png')
+                        : null,
+                  ),
+                  const SizedBox(width: 60),
+                  Flexible(
+                    child: Column(
+                      children: [
+                        Customprimarytext(text: username, fontValue: 25),
+                        Customprimarytext(
+                          text: user?.email ?? " ",
+                          fontValue: 15,
+                        ),
+                        SizedBox(height: 5),
+                        SizedBox(
+                          height: 30,
+                          width: 90,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.tertiary,
                               ),
-                              Text(
-                                "Edit",
-                                style: TextStyle(
-                                  fontSize: 12,
+                            ),
+                            onPressed: () async {
+                              GoRouter.of(context).push('/editProfile');
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.edit,
+                                  size: 12,
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.secondary,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "Edit",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: StreakWidget(streakData: dummyData),
+                ],
               ),
+
               const SizedBox(height: 20),
               _settingsSectionTitle("Feedback"),
               _SettingsTile(
@@ -160,6 +161,7 @@ class Profilepage extends ConsumerWidget {
             ],
           ),
         ),
+      ),
     );
   }
 }

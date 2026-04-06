@@ -12,7 +12,7 @@ class CourseInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      top: false,
+      top: true,
       bottom: true,
       child: DefaultTabController(
         length: 4,
@@ -185,7 +185,8 @@ class _TabSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const TabBar(
-      isScrollable: true,
+  
+
       tabs: [
         Tab(text: "About"),
         Tab(text: "Schedule"),

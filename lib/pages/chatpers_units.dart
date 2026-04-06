@@ -42,51 +42,55 @@ class _ChatpersUnitsState extends ConsumerState<ChatpersUnits> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: Text(
-          widget.name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: CustomSlidingSegmentedControl<int>(
-              initialValue: _selectedIndex,
-              children: const {0: Text("Units"), 1: Text("Exams")},
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: colorScheme.tertiary),
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          title: Text(
+            widget.name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(60),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: CustomSlidingSegmentedControl<int>(
+                initialValue: _selectedIndex,
+                children: const {0: Text("Units"), 1: Text("Exams")},
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: colorScheme.tertiary),
+                ),
+                thumbDecoration: BoxDecoration(
+                  color: colorScheme.primary,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                onValueChanged: (value) {
+                  setState(() => _selectedIndex = value);
+                  _pageController.animateToPage(
+                    value,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                },
               ),
-              thumbDecoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              onValueChanged: (value) {
-                setState(() => _selectedIndex = value);
-                _pageController.animateToPage(
-                  value,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
-              },
             ),
           ),
         ),
-      ),
-      body: PageView(
-        controller: _pageController,
-        physics: const BouncingScrollPhysics(),
-        onPageChanged: (index) {
-          setState(() => _selectedIndex = index);
-        },
-        children: [
-          _unitsGrid(context),
-          const StudentExams(unitId: ''),
-        ],
+        body: PageView(
+          controller: _pageController,
+          physics: const BouncingScrollPhysics(),
+          onPageChanged: (index) {
+            setState(() => _selectedIndex = index);
+          },
+          children: [
+            _unitsGrid(context),
+            const StudentExams(unitId: ''),
+          ],
+        ),
       ),
     );
   }

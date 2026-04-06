@@ -9,6 +9,7 @@ import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/course_card_new1.dart';
 import 'package:learning_app/widgets/customAppBar.dart';
+import 'package:learning_app/widgets/customTextBox.dart';
 
 class CourseSubjectPage extends ConsumerWidget {
   const CourseSubjectPage({super.key});
@@ -19,7 +20,7 @@ class CourseSubjectPage extends ConsumerWidget {
     final user = HiveService.getUser();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: Customappbar(title: user?.username??"username"),
+      appBar: Customappbar(title: user?.username ?? "username"),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: coursesAsync.when(
@@ -73,75 +74,94 @@ class CourseSubjectPage extends ConsumerWidget {
                                     onTap: () async {
                                       showModalBottomSheet(
                                         context: context,
-                                        isScrollControlled:
-                                            true, // makes sheet expand with keyboard
+                                        isScrollControlled: true,
                                         builder: (context) {
                                           final codeController =
                                               TextEditingController();
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 16,
-                                              right: 16,
-                                              top: 16,
-                                              bottom:
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).viewInsets.bottom +
-                                                  16,
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Text(
-                                                  "Enter Batch Code",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 12),
-                                                TextField(
-                                                  controller: codeController,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                        border:
-                                                            OutlineInputBorder(),
-                                                        hintText: "Batch code",
-                                                      ),
-                                                ),
-                                                const SizedBox(height: 12),
-                                                ElevatedButton(
-                                                  onPressed: () async {
-                                                    final notifier = ref.read(
-                                                      batchRequestsProvider
-                                                          .notifier,
-                                                    );
-                                                    notifier.setcourseId(
-                                                      course.course_id ?? "",
-                                                    );
-
-                                                    final success =
-                                                        await notifier
-                                                            .submitRequest(
-                                                              code:
-                                                                  codeController
-                                                                      .text
-                                                                      .trim(),
-                                                            );
-
-                                                    Navigator.pop(context);
-                                                    AppSnackBar.show(
+                                          return SafeArea(
+                                            bottom: true,
+                                            top: false,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 16,
+                                                right: 16,
+                                                top: 20,
+                                                bottom:
+                                                    MediaQuery.of(
                                                       context,
-                                                      message: success
-                                                          ? "Request submitted successfully"
-                                                          : "Failed to submit request",
-                                                      type: SnackType.success,
-                                                      showAtTop: true,
-                                                    );
-                                                  },
-                                                  child: const Text("Submit"),
-                                                ),
-                                              ],
+                                                    ).viewInsets.bottom +
+                                                    16,
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    "Enter Batch Code",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 15),
+                                                  Customtextbox(
+                                                    hinttext: "Batch Code",
+                                                    textController:
+                                                        codeController,
+                                                    textFieldIcon:
+                                                        Icons.numbers,
+                                                  ),
+
+                                                  const SizedBox(height: 12),
+                                                  ElevatedButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          WidgetStatePropertyAll(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .secondary,
+                                                          ),
+                                                      shape: WidgetStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                15,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    onPressed: () async {
+                                                      final notifier = ref.read(
+                                                        batchRequestsProvider
+                                                            .notifier,
+                                                      );
+                                                      notifier.setcourseId(
+                                                        course.course_id ?? "",
+                                                      );
+
+                                                      final success =
+                                                          await notifier
+                                                              .submitRequest(
+                                                                code:
+                                                                    codeController
+                                                                        .text
+                                                                        .trim(),
+                                                              );
+
+                                                      Navigator.pop(context);
+                                                      AppSnackBar.show(
+                                                        context,
+                                                        message: success
+                                                            ? "Request submitted successfully"
+                                                            : "Failed to submit request",
+                                                        type: SnackType.success,
+                                                        showAtTop: true,
+                                                      );
+                                                    },
+                                                    child: const Text("Submit"),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         },
