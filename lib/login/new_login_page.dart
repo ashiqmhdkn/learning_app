@@ -6,6 +6,7 @@ import 'package:learning_app/api/profileapi.dart';
 import 'package:learning_app/controller/authcontroller.dart';
 import 'package:learning_app/login/otp_page.dart';
 import 'package:learning_app/models/user_model.dart';
+import 'package:learning_app/widgets/customBoldText.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,7 @@ class NewLoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<NewLoginPage> {
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
 
   bool _obscurePassword = true;
@@ -47,11 +48,13 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 radius: 100,
               ),
               const SizedBox(height: 30),
-
-              Customtextbox(
-                hinttext: 'Phone number',
-                textController: _phoneNumberController,
-                textFieldIcon: Icons.phone,
+             Text("A LEGACY OF SUCCESS FOR GENERATIONS",textAlign: TextAlign.justify,style: TextStyle(fontSize: 18,fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,),)
+            ,
+            const SizedBox(height: 15),
+            Customtextbox(
+                hinttext: 'Email',
+                textController: _emailcontroller,
+                textFieldIcon: Icons.email,
               ),
 
               const SizedBox(height: 15),
@@ -102,7 +105,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
 
                   bool success = await ref
                       .read(authControllerProvider.notifier)
-                      .login(_phoneNumberController.text,_passwordcontroller.text);
+                      .login(_emailcontroller.text,_passwordcontroller.text);
                   if (!success) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -144,18 +147,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
               ),
               const SizedBox(height: 10),
 
-              Custombuttonone(
-                text: 'Otp test',
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (_) =>
-                        OtpBottomSheet(phone: _phoneNumberController.text),
-                  );
-                },
-              ),
+             
             ],
           ),
         ),

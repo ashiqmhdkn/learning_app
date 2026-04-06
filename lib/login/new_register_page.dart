@@ -15,7 +15,7 @@ class NewRegisterPage extends ConsumerStatefulWidget {
 }
 
 class _RegisterState extends ConsumerState<NewRegisterPage> {
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _namecontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -24,12 +24,11 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  String? _selectedRole;
-  final List<String> _roles = ['student', 'teacher', 'admin'];
+  String? _selectedRole='student';
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _emailcontroller.dispose();
     _namecontroller.dispose();
     _passwordcontroller.dispose();
     _confirmPasswordController.dispose();
@@ -68,32 +67,10 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
 
               const SizedBox(height: 15),
 
-              DropdownButtonFormField<String>(
-                initialValue: _selectedRole,
-                hint: const Text("Select Role"),
-                borderRadius: BorderRadius.circular(8),
-                items: _roles.map((role) {
-                  return DropdownMenuItem(value: role, child: Text(role));
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedRole = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.group_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
               Customtextbox(
-                hinttext: 'Phone number',
-                textController: _phoneNumberController,
-                textFieldIcon: Icons.phone,
+                hinttext: 'Email',
+                textController: _emailcontroller,
+                textFieldIcon: Icons.email,
               ),
 
               const SizedBox(height: 15),
@@ -167,7 +144,7 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
               Custombuttonone(
                 text: 'Sign Up',
                 onTap: () async {
-                  if (_phoneNumberController.text.isEmpty) {
+                  if (_emailcontroller.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("email field free")),
                     );
@@ -202,7 +179,7 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
                      await ref
                         .read(authControllerProvider.notifier)
                         .register(
-                          email: _phoneNumberController.text,
+                          email: _emailcontroller.text,
                           name: _namecontroller.text,
                           role: _selectedRole!,
                           password: _passwordcontroller.text,
