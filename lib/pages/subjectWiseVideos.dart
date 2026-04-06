@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:learning_app/pages/videoPlayBack.dart';
 import 'package:learning_app/pages/videoSelectionCard.dart';
 import 'package:learning_app/provider/videoupload_provider.dart';
@@ -30,6 +31,8 @@ class _SubjectwisevideosState extends ConsumerState<Subjectwisevideos> {
 
   @override
   Widget build(BuildContext context) {
+    final box = Hive.box('videos');
+print("HIVE DATA: ${box.toMap()}");
     final videoProvider = ref.watch(videosNotifierProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -47,7 +50,7 @@ class _SubjectwisevideosState extends ConsumerState<Subjectwisevideos> {
                 itemCount: videos.length,
                 itemBuilder: (context, index) {
                   final video = videos[index];
-
+                  print(video.thumbnail_url);
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     child: SlideAnimation(
@@ -61,7 +64,7 @@ class _SubjectwisevideosState extends ConsumerState<Subjectwisevideos> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) =>
-                                    Videoplayback(url: video.video_url,title: "",description: "",),
+                                    Videoplayback(url: video.video_url,title: video.title,description: video.description,),
                               ),
                             );
                           },

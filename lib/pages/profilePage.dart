@@ -58,15 +58,21 @@ class Profilepage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(user?.image ??""),
-                ),
+  radius: 70,
+  backgroundColor: Colors.grey.shade200,
+  backgroundImage: (user?.image != null && user!.image!.isNotEmpty)
+      ? NetworkImage(user.image!)
+      : null,
+  child: (user?.image == null || user!.image!.isEmpty)
+      ?Image.asset('lib/assets/image.png')
+      : null,
+),
                 const SizedBox(width: 60),
                 Flexible(
                   child: Column(
                     children: [
                       Customprimarytext(text: username, fontValue: 25),
-                      Customprimarytext(text: "Class XII", fontValue: 15),
+                      Customprimarytext(text: user?.email??" ", fontValue: 15),
                       SizedBox(height: 5),
                       SizedBox(
                         height: 30,

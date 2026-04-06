@@ -21,8 +21,15 @@ class Customappbar extends ConsumerWidget implements PreferredSizeWidget {
             context.push('/profile/${user?.username}');
           },
           icon: CircleAvatar(
-            backgroundImage:NetworkImage(user?.image ??""),
-          ),
+  radius: 70,
+  backgroundColor: Colors.grey.shade200,
+  backgroundImage: (user?.image != null && user!.image!.isNotEmpty)
+      ? NetworkImage(user.image!)
+      : null,
+  child: (user?.image == null || user!.image!.isEmpty)
+      ?Image.asset('lib/assets/image.png')
+      : null,
+),
         ),
       ],
       backgroundColor: Theme.of(context).colorScheme.surface,

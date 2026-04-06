@@ -42,9 +42,7 @@ class _MyHomePageState extends ConsumerState<HomePage> {
 
       // ✅ Safe to call AFTER build completes
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref
-            .read(subjectsNotifierProvider.notifier)
-            .setcourse_id(courseToUse!);
+        ref.read(subjectsNotifierProvider.notifier).setcourse_id(courseToUse!);
       });
     }
   }
@@ -53,31 +51,37 @@ class _MyHomePageState extends ConsumerState<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_course', value);
   }
-
   @override
   Widget build(BuildContext context) {
     if (courses.isEmpty) {
       return CourseSubjectPage();
     }
-final user = HiveService.getUser();
+    final user = HiveService.getUser();
+    print(user.toString());
     return Scaffold(
       appBar: AppBar(
-        actions: [ 
+        actions: [
           IconButton(
-          onPressed: () async {
-            context.push('/profile/${user?.username}');
-          },
-          icon: CircleAvatar(
-            backgroundImage:NetworkImage(user?.image ??""),
-          ),
-        ),],
+  onPressed: () async {
+    context.push('/profile/${user?.username}');
+  },
+  icon: profileAvatar(user?.image), // ✅ correct
+),
+        ],
         title: DropdownMenu<String>(
+          inputDecorationTheme: const InputDecorationTheme(
+            border: InputBorder.none, // Removes the base border
+            enabledBorder: InputBorder.none, // Removes border when not focused
+            focusedBorder: InputBorder.none, // Removes border when focused
+          ),
           initialSelection: selectedCourse,
           dropdownMenuEntries: courses
-              .map((course) => DropdownMenuEntry<String>(
-                    value: course.course_id!,
-                    label: course.title,
-                  ))
+              .map(
+                (course) => DropdownMenuEntry<String>(
+                  value: course.course_id!,
+                  label: course.title,
+                ),
+              )
               .toList(),
           onSelected: (value) async {
             if (value == null) return;
@@ -89,9 +93,7 @@ final user = HiveService.getUser();
             await _saveSelectedCourse(value);
 
             // ✅ Safe — called from a user interaction, not during build
-            ref
-                .read(subjectsNotifierProvider.notifier)
-                .setcourse_id(value);
+            ref.read(subjectsNotifierProvider.notifier).setcourse_id(value);
           },
         ),
       ),
@@ -168,7 +170,24 @@ final user = HiveService.getUser();
 
 
 
-
+Widget profileAvatar(String? image) {
+  print("-----------------------------------profile avater----------------------------------------------");
+  print(image);
+  return CircleAvatar(
+    radius: 20,
+    backgroundColor: Colors.grey.shade200,
+    child: ClipOval(
+      child: (image != null && image.isNotEmpty)
+          ? Image.network(
+              image,
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover
+            )
+          : Icon(Icons.person)
+    ),
+  );
+}
 
 
 

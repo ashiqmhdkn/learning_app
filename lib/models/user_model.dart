@@ -19,7 +19,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      image: json['image']?.toString() ?? 'https://imagedelivery.net/qbIY5PxQGCt4my9mH271vg/99b1944d-1cec-422f-a658-655e7df66800/public',
+      image: json['image']?.toString() ?? '',
       userId: json['user_id'] as String,
       username: json['name'] as String,
       email: json['email'] as String,
@@ -38,6 +38,7 @@ class User {
       'email': email,
       'phone': phone,
       'role': role,
+      'image':image,
       if (lastLogin != null) 'last_login': lastLogin!.toIso8601String(),
     };
   }

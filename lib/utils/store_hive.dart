@@ -66,7 +66,12 @@ Future<void> storeHive(dynamic apiResponse) async {
     final user = User.fromJson(userJson);
     await HiveService.saveUser(user);
     print('✅ User saved: ${user.username}');
+    print("RAW USER:");
+print(userRaw);
 
+print("MAP USER:");
+print(userJson);
+    
     // ── 2. BATCHES ───────────────────────────────────────────────────────
     final batchesRaw = response['batches'];
     if (batchesRaw == null) {
