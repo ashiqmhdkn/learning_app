@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
+
 class NotesCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -29,32 +30,36 @@ class NotesCard extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15, 12, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.note_alt_outlined,
+                        color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(fontSize: 14),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 30,
-                          width: 130,
-                          child: Custombuttonone(
-                            text: "Download",
-                            onTap: onTap,
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(fontSize: 14),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

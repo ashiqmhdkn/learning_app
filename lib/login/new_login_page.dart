@@ -48,10 +48,17 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 radius: 100,
               ),
               const SizedBox(height: 30),
-             Text("A LEGACY OF SUCCESS FOR GENERATIONS",textAlign: TextAlign.justify,style: TextStyle(fontSize: 18,fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,),)
-            ,
-            const SizedBox(height: 15),
-            Customtextbox(
+              Text(
+                "A LEGACY OF SUCCESS FOR GENERATIONS",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Customtextbox(
                 hinttext: 'Email',
                 textController: _emailcontroller,
                 textFieldIcon: Icons.email,
@@ -105,7 +112,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
 
                   bool success = await ref
                       .read(authControllerProvider.notifier)
-                      .login(_emailcontroller.text,_passwordcontroller.text);
+                      .login(_emailcontroller.text, _passwordcontroller.text);
                   if (!success) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +140,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                     return;
                   }
                   User person = await profileapi(token);
-                    GoRouter.of(context).go('/');                
+                  GoRouter.of(context).go('/');
                 },
               ),
 
@@ -146,8 +153,6 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 },
               ),
               const SizedBox(height: 10),
-
-             
             ],
           ),
         ),

@@ -22,7 +22,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _checkAuth() async {
-   final token = await ref.read(authControllerProvider.notifier).getToken();
+    final token = await ref.read(authControllerProvider.notifier).getToken();
 
     if (token == null || token == "loading") {
       // No token → go to login
@@ -30,14 +30,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
     // If you need profile API call:
     final user = await profileapi(token!);
-    if (user!=Error()&&user.role=='student')
-    { 
+    if (user != Error() && user.role == 'student') {
       GoRouter.of(context).go("/");
-      }
-     else{
-        AppSnackBar.show(context, message: "unsuccessfull user fetch");
-        GoRouter.of(context).go('/login');
-         }
+    } else {
+      AppSnackBar.show(context, message: "unsuccessfull user fetch");
+      GoRouter.of(context).go('/login');
+    }
     // );
   }
 
@@ -46,11 +44,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // set theme according to system
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: CircleAvatar(
-          radius: 80,
-          backgroundImage: Image.asset('lib/assets/image.png').image,
-        ), // simple splash loader
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: CircleAvatar(
+              radius: 80,
+              backgroundImage: Image.asset('lib/assets/image.png').image,
+            ),
+            // simple splash loader
+          ),
+          const SizedBox(height: 30),
+          Text(
+            "A LEGACY OF SUCCESS FOR GENERATIONS",
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              fontSize: 18,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
