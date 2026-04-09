@@ -160,6 +160,14 @@ class CourseSubjectPage extends ConsumerWidget {
                                                     },
                                                     child: const Text("Submit"),
                                                   ),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    "Having trouble? Call/Message +91 73568 47300",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),

@@ -59,6 +59,8 @@ flutter_icons:
   android: true
   ios: true
   image_path: "lib/assets/image.png"
+  adaptive_icon_background: "#FFFFFF"  
+  adaptive_icon_foreground: "lib/assets/image.png"
 
 dependency_overrides:
   analyzer: ^6.4.1 # forces compatible analyzer version

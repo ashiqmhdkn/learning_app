@@ -6,6 +6,7 @@ import 'package:learning_app/api/profileapi.dart';
 import 'package:learning_app/controller/authcontroller.dart';
 import 'package:learning_app/login/otp_page.dart';
 import 'package:learning_app/models/user_model.dart';
+import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/widgets/customBoldText.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
@@ -47,7 +48,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 backgroundImage: AssetImage('lib/assets/image.png'),
                 radius: 100,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               Text(
                 "A LEGACY OF SUCCESS FOR GENERATIONS",
                 textAlign: TextAlign.justify,
@@ -57,7 +58,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 30),
               Customtextbox(
                 hinttext: 'Email',
                 textController: _emailcontroller,
@@ -109,7 +110,9 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   //   _passwordcontroller.text,
                   //   "y6SsdIR",
                   // );
-
+                  if (!isValidEmail(_emailcontroller.text, context)) return;
+                  if (!isValidPassword(_passwordcontroller.text, context))
+                    return;
                   bool success = await ref
                       .read(authControllerProvider.notifier)
                       .login(_emailcontroller.text, _passwordcontroller.text);
@@ -166,4 +169,86 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
+}
+
+bool isValidEmail(String email, BuildContext context) {
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  if (email.isEmpty) {
+    AppSnackBar.show(
+      context,
+      message: "Email cannot be empty",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (!emailRegex.hasMatch(email)) {
+    AppSnackBar.show(
+      context,
+      message: "Enter a valid email address",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  return true;
+}
+
+bool isValidPassword(String password, BuildContext context) {
+  if (password.isEmpty) {
+    AppSnackBar.show(
+      context,
+      message: "Password cannot be empty",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (password.length < 8) {
+    AppSnackBar.show(
+      context,
+      message: "Password must be at least 8 characters",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (!RegExp(r'[A-Z]').hasMatch(password)) {
+    AppSnackBar.show(
+      context,
+      message: "Password must contain at least 1 uppercase letter",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (!RegExp(r'[a-z]').hasMatch(password)) {
+    AppSnackBar.show(
+      context,
+      message: "Password must contain at least 1 lowercase letter",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (!RegExp(r'[0-9]').hasMatch(password)) {
+    AppSnackBar.show(
+      context,
+      message: "Password must contain at least 1 number",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {
+    AppSnackBar.show(
+      context,
+      message: "Password must contain at least 1 special character",
+      type: SnackType.error,
+    );
+    return false;
+  }
+
+  return true;
 }

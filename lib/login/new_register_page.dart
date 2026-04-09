@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/login/new_login_page.dart';
+import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
 
@@ -24,7 +26,7 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  String? _selectedRole='student';
+  String? _selectedRole = 'student';
 
   @override
   void dispose() {
@@ -144,29 +146,24 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
               Custombuttonone(
                 text: 'Sign Up',
                 onTap: () async {
-                  if (_emailcontroller.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("email field free")),
-                    );
-                    return;
-                  }
                   if (_namecontroller.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("name field free")),
+                    AppSnackBar.show(
+                      context,
+                      message: "Name field cannot be empty!",
+                      type: SnackType.error,
                     );
                     return;
                   }
-                  if (_selectedRole == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please select a role")),
-                    );
+                  if (!isValidEmail(_emailcontroller.text, context)) return;
+                  if (!isValidPassword(_passwordcontroller.text, context))
                     return;
-                  }
 
                   if (_passwordcontroller.text !=
                       _confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Passwords do not match")),
+                    AppSnackBar.show(
+                      context,
+                      message: "Passwords do not match",
+                      type: SnackType.error,
                     );
                     return;
                   }
@@ -176,7 +173,7 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
                     //   _passwordcontroller.text,
                     //   "y6SsdIR",
                     // );
-                     await ref
+                    await ref
                         .read(authControllerProvider.notifier)
                         .register(
                           email: _emailcontroller.text,
@@ -185,14 +182,18 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
                           password: _passwordcontroller.text,
                         );
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registration successful')),
+                    AppSnackBar.show(
+                      context,
+                      message: "Registration successful",
+                      type: SnackType.success,
                     );
 
                     GoRouter.of(context).go('/login');
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Registration failed: $e')),
+                    AppSnackBar.show(
+                      context,
+                      message: "'Registration failed: $e'",
+                      type: SnackType.error,
                     );
                   }
                 },
