@@ -11,7 +11,7 @@ import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
 
 class UpdateProfilePage extends ConsumerStatefulWidget {
-  const UpdateProfilePage({super.key,});
+  const UpdateProfilePage({super.key});
 
   @override
   ConsumerState<UpdateProfilePage> createState() => _UpdateProfilePageState();
@@ -30,9 +30,7 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
     final user = HiveService.getUser();
     _nameController = TextEditingController(text: user?.username);
     _emailController = TextEditingController(text: user?.email);
-    _phoneController = TextEditingController(
-      text: user?.phone.toString(),
-    );
+    _phoneController = TextEditingController(text: user?.phone.toString());
   }
 
   @override
@@ -66,10 +64,11 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
       final token = ref.read(authControllerProvider);
       // Call your user controller to update profile
       await profileupdate(
-        token:token!, 
-        name:_nameController.text.trim(),
+        token: token!,
+        name: _nameController.text.trim(),
         email: _emailController.text.trim(),
-        phone: int.tryParse(_phoneController.text.trim()) ??0);
+        phone: int.tryParse(_phoneController.text.trim()) ?? 0,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -100,6 +99,7 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = HiveService.getUser();
     final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
@@ -123,9 +123,13 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
                 child: Stack(
                   children: [
                     CircleAvatar(
-                      radius: 55,
-                      backgroundImage: _profileImagePath.isNotEmpty
-                          ? FileImage(File(_profileImagePath))
+                      radius: 50,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage:
+                          (user != null &&
+                              user.image != null &&
+                              user.image!.isNotEmpty)
+                          ? NetworkImage(user.image!)
                           : const AssetImage('lib/assets/image.png')
                                 as ImageProvider,
                     ),
@@ -172,31 +176,31 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
                 keyboardType: TextInputType.phone,
               ),
 
-            const SizedBox(height: 16),
-            Customprimarytext(text: "Email Address", fontValue: 15),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                hintText: "Email Address",
-                prefixIcon: Icon(Icons.mail),
+              // const SizedBox(height: 16),
+              // Customprimarytext(text: "Email Address", fontValue: 15),
+              // TextFormField(
+              //   controller: _emailController,
+              //   decoration: InputDecoration(
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     hintText: "Email Address",
+              //     prefixIcon: Icon(Icons.mail),
+              //   ),
+              //   keyboardType: TextInputType.emailAddress,
+              // ),
+              const SizedBox(height: 30),
+              Center(
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : Custombuttonone(
+                        text: "Save Changes",
+                        onTap: _handleSaveChanges,
+                      ),
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: _isLoading
-                  ? const CircularProgressIndicator()
-                  : Custombuttonone(
-                      text: "Save Changes",
-                      onTap: _handleSaveChanges,
-                    ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
