@@ -39,124 +39,133 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
       //   ),
       // ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(7.0),
-                child: const CircleAvatar(
-                  backgroundImage: AssetImage('lib/assets/image.png'),
-                  radius: 100,
-                ),
-              ),
-              Customboldtext(text: "Login", fontValue: 30),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // const SizedBox(height: 30,),
-                  Customtextbox(
-                    hinttext: 'Email',
-                    textController: _emailcontroller,
-                    textFieldIcon: Icons.email,
-                  ),
-                  const SizedBox(height: 15),
-                
-              TextField(
-                controller: _passwordcontroller,
-                obscureText: _obscurePassword,
-                style: const TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.lock_outline_rounded,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Password",
-                  hintStyle: const TextStyle(color: Colors.black),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off_rounded
-                          : Icons.visibility_rounded,
-                      color: Theme.of(context).colorScheme.tertiary,
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height,
+        ),
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(7.0),
+                      child: const CircleAvatar(
+                        backgroundImage: AssetImage('lib/assets/image.png'),
+                        radius: 100,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
+                    Customboldtext(text: "Login", fontValue: 30),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // const SizedBox(height: 30,),
+                        Customtextbox(
+                          hinttext: 'Email',
+                          textController: _emailcontroller,
+                          textFieldIcon: Icons.email,
+                        ),
+                        const SizedBox(height: 15),
+                      
+                    TextField(
+                      controller: _passwordcontroller,
+                      obscureText: _obscurePassword,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.lock_outline_rounded,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Password",
+                        hintStyle: const TextStyle(color: Colors.black),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                      
+                    const SizedBox(height: 15),
+                      
+                    Custombuttonone(
+                      text: authState == "loading" ? 'Signing In...' : 'Sign In',
+                      onTap: () async {
+                        FocusScope.of(context).unfocus();
+                      
+                        // final pass = hashPasswordWithSalt(
+                        //   _passwordcontroller.text,
+                        //   "y6SsdIR",
+                        // );
+                        if (!isValidEmail(_emailcontroller.text, context)) return;
+                        if (!isValidPassword(_passwordcontroller.text, context))
+                          return;
+                        bool success = await ref
+                            .read(authControllerProvider.notifier)
+                            .login(_emailcontroller.text, _passwordcontroller.text);
+                        if (!success) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Invalid email or password'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          return;
+                        }
+                        final token = await ref
+                            .read(authControllerProvider.notifier)
+                            .getToken();
+                      
+                        if (token == null) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Authentication error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          return;
+                        }
+                        User person = await profileapi(token);
+                        GoRouter.of(context).go('/');
+                      },
+                    ),
+                      
+                    // const SizedBox(height: 10),
+                      
+                   
+                      ],
+                    ),
+                      
+                     Custombuttonone(
+                      text: 'Go to Register',
+                      onTap: () {
+                        context.push('/register');
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
               ),
-                
-              const SizedBox(height: 15),
-                
-              Custombuttonone(
-                text: authState == "loading" ? 'Signing In...' : 'Sign In',
-                onTap: () async {
-                  FocusScope.of(context).unfocus();
-                
-                  // final pass = hashPasswordWithSalt(
-                  //   _passwordcontroller.text,
-                  //   "y6SsdIR",
-                  // );
-                  if (!isValidEmail(_emailcontroller.text, context)) return;
-                  if (!isValidPassword(_passwordcontroller.text, context))
-                    return;
-                  bool success = await ref
-                      .read(authControllerProvider.notifier)
-                      .login(_emailcontroller.text, _passwordcontroller.text);
-                  if (!success) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Invalid email or password'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                    return;
-                  }
-                  final token = await ref
-                      .read(authControllerProvider.notifier)
-                      .getToken();
-                
-                  if (token == null) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Authentication error'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                    return;
-                  }
-                  User person = await profileapi(token);
-                  GoRouter.of(context).go('/');
-                },
-              ),
-                
-              // const SizedBox(height: 10),
-                
-             
-                ],
-              ),
-                
-               Custombuttonone(
-                text: 'Go to Register',
-                onTap: () {
-                  context.push('/register');
-                },
-              ),
-              const SizedBox(height: 10),
-            ],
+            ),
           ),
         ),
       ),
