@@ -30,43 +30,39 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        title: const Text(
-          "Login",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          color: Theme.of(context).colorScheme.surface,
+      // appBar: AppBar(
+      //   scrolledUnderElevation: 0,
+      //   title:const Center(
+      //     child: Customboldtext(
+      //       text: "Login", fontValue: 30, 
+      //     ),
+      //   ),
+      // ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
+            mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
             children: [
-              const CircleAvatar(
-                backgroundImage: AssetImage('lib/assets/image.png'),
-                radius: 100,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "A LEGACY OF SUCCESS FOR GENERATIONS",
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.all(7.0),
+                child: const CircleAvatar(
+                  backgroundImage: AssetImage('lib/assets/image.png'),
+                  radius: 100,
                 ),
               ),
-              const SizedBox(height: 30),
-              Customtextbox(
-                hinttext: 'Email',
-                textController: _emailcontroller,
-                textFieldIcon: Icons.email,
-              ),
-
-              const SizedBox(height: 15),
-
+              Customboldtext(text: "Login", fontValue: 30),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // const SizedBox(height: 30,),
+                  Customtextbox(
+                    hinttext: 'Email',
+                    textController: _emailcontroller,
+                    textFieldIcon: Icons.email,
+                  ),
+                  const SizedBox(height: 15),
+                
               TextField(
                 controller: _passwordcontroller,
                 obscureText: _obscurePassword,
@@ -98,14 +94,14 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   ),
                 ),
               ),
-
+                
               const SizedBox(height: 15),
-
+                
               Custombuttonone(
                 text: authState == "loading" ? 'Signing In...' : 'Sign In',
                 onTap: () async {
                   FocusScope.of(context).unfocus();
-
+                
                   // final pass = hashPasswordWithSalt(
                   //   _passwordcontroller.text,
                   //   "y6SsdIR",
@@ -130,7 +126,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   final token = await ref
                       .read(authControllerProvider.notifier)
                       .getToken();
-
+                
                   if (token == null) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,10 +142,14 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   GoRouter.of(context).go('/');
                 },
               ),
-
-              const SizedBox(height: 10),
-
-              Custombuttonone(
+                
+              // const SizedBox(height: 10),
+                
+             
+                ],
+              ),
+                
+               Custombuttonone(
                 text: 'Go to Register',
                 onTap: () {
                   context.push('/register');
