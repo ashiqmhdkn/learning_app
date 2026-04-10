@@ -35,6 +35,7 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
     if (value.isNotEmpty && index < 5) {
       focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
+      sendOtp(widget.user.email);
       focusNodes[index - 1].requestFocus();
     }
     setState(() {});
