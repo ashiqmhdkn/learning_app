@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learning_app/controller/authcontroller.dart';
 import 'package:learning_app/models/streak_modal.dart';
+import 'package:learning_app/pages/policy_page.dart';
 import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/darkOrLight.dart';
@@ -143,7 +144,15 @@ class Profilepage extends ConsumerWidget {
               _SettingsTile(
                 icon: Icons.lock_outline,
                 title: "Privacy policy",
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) {
+                        return PrivacyPolicyPage();
+                      },
+                    ),
+                  );
+                },
               ),
 
               const SizedBox(height: 20),

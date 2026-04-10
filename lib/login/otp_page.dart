@@ -1,17 +1,25 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:learning_app/api/otpapi.dart';
+import 'package:learning_app/controller/authcontroller.dart';
+import 'package:learning_app/models/user_model.dart';
 import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 
-class OtpBottomSheet extends StatefulWidget {
-  final String phone;
+class OtpBottomSheet extends ConsumerStatefulWidget {
+  final User user;
+  final String password;
 
-  const OtpBottomSheet({super.key, required this.phone});
+  const OtpBottomSheet({super.key, required this.password, required this.user});
 
   @override
-  State<OtpBottomSheet> createState() => _OtpBottomSheetState();
+  ConsumerState<OtpBottomSheet> createState() => _OtpBottomSheetState();
 }
 
-class _OtpBottomSheetState extends State<OtpBottomSheet> {
+class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
   final List<TextEditingController> controllers = List.generate(
     6,
     (_) => TextEditingController(),
@@ -36,109 +44,163 @@ class _OtpBottomSheetState extends State<OtpBottomSheet> {
   Widget build(BuildContext context) {
     final isFilled = getOtp().length == 6;
 
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(10),
+    return SafeArea(
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
-            const Text(
-              "Verify Your Phone Number",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 10),
-            Text(
-              "Please enter the 6-digit code we sent to",
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 17),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 5),
-
-            Text(
-              widget.phone,
-              style: const TextStyle(
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.w500,
+              const SizedBox(height: 20),
+              const Text(
+                "Verify Your E-mail",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-            ),
 
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(6, (index) {
-                return SizedBox(
-                  width: 45,
-                  child: TextField(
-                    style: TextStyle(color: Colors.black),
-                    controller: controllers[index],
-                    focusNode: focusNodes[index],
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    maxLength: 1,
-                    decoration: InputDecoration(
-                      counterText: "",
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 10),
+              Text(
+                "Please enter the 6-digit code we sent to",
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 5),
+
+              Text(
+                widget.user.email,
+                style: const TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(6, (index) {
+                  return SizedBox(
+                    width: 45,
+                    child: TextField(
+                      style: TextStyle(color: Colors.black),
+                      controller: controllers[index],
+                      focusNode: focusNodes[index],
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      maxLength: 1,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
+                      onChanged: (value) => onOtpChange(index, value),
                     ),
-                    onChanged: (value) => onOtpChange(index, value),
-                  ),
-                );
-              }),
-            ),
+                  );
+                }),
+              ),
 
-            const SizedBox(height: 15),
-            Custombuttonone(
-              text: "Send Again",
-              onTap: () {
-                AppSnackBar.show(
-                  context,
-                  message: "Otp successfully sended",
-                  type: SnackType.success,
-                  showAtTop: true,
-                );
-              },
-            ),
+              const SizedBox(height: 15),
 
-            const SizedBox(height: 10),
-            Custombuttonone(
-              text: "Continue",
-              onTap: isFilled
-                  ? () {
-                      final otp = getOtp();
+              Custombuttonone(
+                text: "Continue",
+                onTap: isFilled
+                    ? () async {
+                        final otp = getOtp();
+                        final bool confirm = await verifyOtp(
+                          email: widget.user.email,
+                          otp: otp,
+                        );
+                        if (confirm) {
+                          AppSnackBar.show(
+                            context,
+                            message: "OTP is correct",
+                            type: SnackType.success,
+                          );
+                          try {
+                            final hashedPassword = hashPasswordWithSalt(
+                              widget.password,
+                              "y6SsdIR",
+                            );
 
-                      Navigator.pop(context);
+                            await ref
+                                .read(authControllerProvider.notifier)
+                                .register(
+                                  email: widget.user.email,
+                                  name: widget.user.username,
+                                  role: widget.user.role,
+                                  password: hashedPassword,
+                                );
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("OTP Entered: $otp")),
-                      );
-                    }
-                  : null,
-            ),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Registration successful'),
+                              ),
+                            );
 
-            const SizedBox(height: 10),
-          ],
+                            GoRouter.of(context).go('/login');
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Registration failed: $e'),
+                              ),
+                            );
+                          }
+                        } else {
+                          AppSnackBar.show(
+                            context,
+                            message: "Incorrect OTP",
+                            type: SnackType.error,
+                          );
+                        }
+                      }
+                    : null,
+              ),
+
+              const SizedBox(height: 10),
+              Custombuttonone(
+                text: "Send Again",
+                onTap: () async {
+                  final result = await sendOtp(widget.user.email);
+
+                  AppSnackBar.show(
+                    context,
+                    message: result["message"],
+                    type: result["success"]
+                        ? SnackType.success
+                        : SnackType.error,
+                    showAtTop: true,
+                  );
+                },
+              ),
+
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  String hashPasswordWithSalt(String password, String salt) {
+    final combined = password + salt;
+    final bytes = utf8.encode(combined);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 }

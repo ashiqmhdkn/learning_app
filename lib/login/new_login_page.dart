@@ -106,16 +106,16 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 onTap: () async {
                   FocusScope.of(context).unfocus();
 
-                  // final pass = hashPasswordWithSalt(
-                  //   _passwordcontroller.text,
-                  //   "y6SsdIR",
-                  // );
+                  final pass = hashPasswordWithSalt(
+                    _passwordcontroller.text,
+                    "y6SsdIR",
+                  );
                   if (!isValidEmail(_emailcontroller.text, context)) return;
                   if (!isValidPassword(_passwordcontroller.text, context))
                     return;
                   bool success = await ref
                       .read(authControllerProvider.notifier)
-                      .login(_emailcontroller.text, _passwordcontroller.text);
+                      .login(_emailcontroller.text, pass);
                   if (!success) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
