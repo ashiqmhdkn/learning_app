@@ -3,8 +3,11 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learning_app/api/otp_api.dart';
 import 'package:learning_app/controller/authcontroller.dart';
 import 'package:learning_app/login/new_login_page.dart';
+import 'package:learning_app/login/otp_sheet.dart';
+import 'package:learning_app/models/user_model.dart';
 import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/widgets/customButtonOne.dart';
 import 'package:learning_app/widgets/customTextBox.dart';
@@ -173,14 +176,22 @@ class _RegisterState extends ConsumerState<NewRegisterPage> {
                     //   _passwordcontroller.text,
                     //   "y6SsdIR",
                     // );
-                    await ref
-                        .read(authControllerProvider.notifier)
-                        .register(
-                          email: _emailcontroller.text,
-                          name: _namecontroller.text,
-                          role: _selectedRole!,
-                          password: _passwordcontroller.text,
-                        );
+                    // await ref
+                    //     .read(authControllerProvider.notifier)
+                    //     .register(
+                    //       email: _emailcontroller.text,
+                    //       name: _namecontroller.text,
+                    //       role: _selectedRole!,
+                    //       password: _passwordcontroller.text,
+                    //     );
+                     sendOtp(_emailcontroller.text);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) =>
+                        OtpBottomSheet(user: User(username: _namecontroller.text, email: _emailcontroller.text, phone: 0, role:_selectedRole!),password:_passwordcontroller.text),
+                  );
 
                     AppSnackBar.show(
                       context,
