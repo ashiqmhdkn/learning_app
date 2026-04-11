@@ -147,11 +147,17 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
 
               const SizedBox(height: 10),
 
-              Custombuttonone(
-                text: 'Go to Register',
-                onTap: () {
+              TextButton(
+                onPressed: () {
                   context.push('/register');
                 },
+                child: const Text(
+                  "New user? Register here",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
             ],
