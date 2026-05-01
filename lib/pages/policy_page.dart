@@ -26,7 +26,13 @@ class PrivacyPolicyPage extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: Customappbar(title: "Privacy Policy"),
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          title: const Text(
+            "Privacy Policy",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(

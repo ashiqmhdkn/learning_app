@@ -97,8 +97,17 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                 ),
               ),
 
-              const SizedBox(height: 15),
-
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Forgot password?",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
               Custombuttonone(
                 text: authState == "loading" ? 'Signing In...' : 'Sign In',
                 onTap: () async {
@@ -155,6 +164,7 @@ class _LoginPageState extends ConsumerState<NewLoginPage> {
                   "New user? Register here",
                   style: TextStyle(
                     color: Colors.blue,
+                    fontSize: 16,
                     decoration: TextDecoration.underline,
                   ),
                 ),

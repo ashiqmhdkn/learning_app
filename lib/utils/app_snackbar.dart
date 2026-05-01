@@ -25,7 +25,7 @@ class AppSnackBar {
       duration: duration,
       margin: behavior == SnackBarBehavior.floating
           ? EdgeInsets.only(
-              bottom: showAtTop ? screenHeight - statusBarHeight - 100 : 20,
+              bottom: showAtTop ? screenHeight - statusBarHeight - 200 : 20,
               top: showAtTop ? statusBarHeight + 10 : 0,
             )
           : null,

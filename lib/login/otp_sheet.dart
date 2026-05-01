@@ -115,8 +115,28 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
                   );
                 }),
               ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () async {
+                    final result = await sendOtp(widget.user.email);
 
-              const SizedBox(height: 15),
+                    AppSnackBar.show(
+                      context,
+                      message: result["message"],
+                      type: result["success"]
+                          ? SnackType.success
+                          : SnackType.error,
+                      showAtTop: true,
+                    );
+                  },
+                  child: const Text(
+                    "Send again",
+                    style: TextStyle(color: Colors.blue, fontSize: 17),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
 
               Custombuttonone(
                 text: "Continue",
@@ -132,6 +152,7 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
                             context,
                             message: "OTP is correct",
                             type: SnackType.success,
+                            showAtTop: true,
                           );
                           try {
                             final hashedPassword = hashPasswordWithSalt(
@@ -167,27 +188,11 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
                             context,
                             message: "Incorrect OTP",
                             type: SnackType.error,
+                            showAtTop: true,
                           );
                         }
                       }
                     : null,
-              ),
-
-              const SizedBox(height: 10),
-              Custombuttonone(
-                text: "Send Again",
-                onTap: () async {
-                  final result = await sendOtp(widget.user.email);
-
-                  AppSnackBar.show(
-                    context,
-                    message: result["message"],
-                    type: result["success"]
-                        ? SnackType.success
-                        : SnackType.error,
-                    showAtTop: true,
-                  );
-                },
               ),
 
               const SizedBox(height: 10),
