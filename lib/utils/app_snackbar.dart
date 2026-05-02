@@ -45,7 +45,6 @@ class AppSnackBar {
       case SnackType.warning:
         return Colors.orange;
       case SnackType.info:
-      default:
         return Colors.blueGrey;
     }
   }

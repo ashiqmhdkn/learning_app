@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learning_app/router/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,8 +8,21 @@ import 'package:learning_app/utils/hive_serivce.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   await HiveService.openAllBoxes();
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.black,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
