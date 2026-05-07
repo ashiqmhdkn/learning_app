@@ -39,9 +39,13 @@ class Videoselectioncard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(imagelocation, fit: BoxFit.fill, errorBuilder: (_, __, ___) {
-      return Image.asset("lib/assets/image.png");
-    },),
+                    child: Image.network(
+                      imagelocation,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) {
+                        return Image.asset("lib/assets/image.png");
+                      },
+                    ),
                   ),
                 ),
               ),
