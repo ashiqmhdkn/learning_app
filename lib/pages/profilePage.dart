@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:learning_app/controller/authcontroller.dart';
 import 'package:learning_app/models/streak_modal.dart';
 import 'package:learning_app/pages/policy_page.dart';
+import 'package:learning_app/utils/app_snackbar.dart';
 import 'package:learning_app/utils/hive_serivce.dart';
 import 'package:learning_app/widgets/customPrimaryText.dart';
 import 'package:learning_app/widgets/darkOrLight.dart';
@@ -162,6 +163,15 @@ class Profilepage extends ConsumerWidget {
                 onTap: () async {
                   await ref.read(authControllerProvider.notifier).logout();
                   HiveService.clearAll();
+
+                  if (!context.mounted) return;
+
+                  AppSnackBar.show(
+                    context,
+                    message: "Logged out successfully",
+                    type: SnackType.success,
+                  );
+
                   GoRouter.of(context).go('/login');
                 },
               ),
